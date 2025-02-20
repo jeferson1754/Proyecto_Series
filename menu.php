@@ -36,10 +36,10 @@
                 <li class="nav-item active"> <a class="nav-link" href="/Series/horario.php">Horario</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"> <a class="nav-link" href="/Manga/Finalizados/">Ver Calificaciones</a> </li>
+                <li class="nav-item active"> <a class="nav-link" href="/Series/Calificaciones/calificaciones.php">Ver Calificaciones</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"> <a class="nav-link" href="/Manga/listas.php/">Editar Calificaciones</a> </li>
+                <li class="nav-item active"> <a class="nav-link" href="/Series/Calificaciones/">Editar Calificaciones</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"> <a class="nav-link" href="/Anime/">Anime</a> </li>
