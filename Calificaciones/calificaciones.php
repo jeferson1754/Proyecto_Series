@@ -280,7 +280,7 @@
     <header class="page-header">
         <div class="container">
             <h1 class="text-center mb-3">Calificaciones de Series</h1>
-            <p class="text-center mb-0 lead">Descubre y explora los mejores animes con sus calificaciones</p>
+            <p class="text-center mb-0 lead">Explora y compara las mejores series con sus puntuaciones detalladas</p>
         </div>
     </header>
 
@@ -329,7 +329,7 @@
                             if (count($images) > 1) {
                         ?>
                                 <!-- Componente Carrusel de Bootstrap -->
-                                <div id="animeCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div id="animeCarousel<?php echo $id_anime; ?>" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
                                         <?php
                                         $isActive = true; // Variable para marcar el primer elemento como activo
@@ -338,7 +338,7 @@
                                         foreach ($images as $imageLink) {
                                         ?>
                                             <div class="carousel-item <?php echo $isActive ? 'active' : ''; ?>">
-                                                <img src="<?php echo $imageLink; ?>" alt="Imagen de <?php echo $id_anime; ?>" class="imagen d-block w-100" style="height: 400px; object-fit: cover;">
+                                                <img src="<?php echo $imageLink; ?>" alt="Imagen de <?php echo $id_anime; ?>" class="imagen d-block w-100">
                                             </div>
                                         <?php
                                             $isActive = false; // Desactivar "active" para los siguientes elementos
@@ -347,11 +347,11 @@
                                     </div>
 
                                     <!-- Controles del Carrusel -->
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#animeCarousel" data-bs-slide="prev">
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#animeCarousel<?php echo $id_anime; ?>" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Anterior</span>
                                     </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#animeCarousel" data-bs-slide="next">
+                                    <button class="carousel-control-next" type="button" data-bs-target="#animeCarousel<?php echo $id_anime; ?>" data-bs-slide="next">
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                         <span class="visually-hidden">Siguiente</span>
                                     </button>
@@ -360,7 +360,7 @@
                             } else {
                                 // Si hay solo una imagen, mostrar la imagen sin carrusel
                                 if (count($images) == 1) {
-                                    echo "<img class='imagen' src='" . $images[0] . "' alt='Imagen de {$id_anime}'>";
+                                    echo "<img class='imagen d-block w-100' src='" . $images[0] . "' alt='Imagen de {$id_anime}'>";
                                 } else {
                                     echo "     
                                      <div class='no-image'>

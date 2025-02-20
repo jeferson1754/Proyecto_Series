@@ -13,7 +13,7 @@ $link           = $_REQUEST['link'];
 try {
     $conn = new PDO("mysql:host=$servidor;dbname=$basededatos", $usuario, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = "UPDATE `calificaciones` SET Link_Imagen='" . $link_imagen . "' WHERE ID='".$idRegistros."'";
+    $sql = "UPDATE `calificaciones_series` SET Link_Imagen='" . $link_imagen . "' WHERE ID='".$idRegistros."'";
     $conn->exec($sql);
     //echo $sql;
     echo "<br>";

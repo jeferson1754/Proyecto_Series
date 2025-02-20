@@ -103,10 +103,10 @@ require 'bd.php';
         include('./ModalCrear.php');
 
         $where = "WHERE $fila8!='Finalizado' ORDER BY `series`.`Estado` ASC limit 100";
-
+        $busqueda = "";
 
         if (isset($_GET['borrar'])) {
-            $busqueda = "";
+
 
             $where = "WHERE $fila8!='Finalizado' ORDER BY `series`.`Estado` ASC limit 100";
         } else if (isset($_GET['filtrar'])) {
@@ -120,7 +120,7 @@ require 'bd.php';
                 $busqueda   = $_REQUEST['busqueda'];
 
 
-                $where = "WHERE $fila2='' OR $fila13='Faltante' OR $fila13='' ORDER BY `$tabla`.`$fila7` DESC  limit 100";
+                $where = "WHERE $fila1 LIKE '%$busqueda%' ORDER BY `$tabla`.`$fila7` DESC  limit 100";
             }
         } else if (isset($_GET['link'])) {
 

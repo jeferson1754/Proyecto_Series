@@ -4,11 +4,6 @@ if (isset($_GET['borrar'])) {
    echo "<input type='hidden' name='link' value='$link'>";
    $lista = "Seleccione";
    $valor = "";
-} else if (isset($_GET['enviar'])) {
-   $link = "./?enviar=&accion=HOY";
-   echo "<input type='hidden' name='link' value='$link'>";
-   $lista = $estado;
-   $valor = $estado;
 } else if (isset($_GET['buscar'])) {
    $link = "./?busqueda_webtoon=$busqueda&buscar=";
    echo "<input type='hidden' name='link' value='$link'>";
@@ -24,12 +19,7 @@ if (isset($_GET['borrar'])) {
    echo "<input type='hidden' name='link' value='$link'>";
    $lista = "Seleccione";
    $valor = "";
-} else if (isset($_GET['faltantes'])) {
-   $link = "./?faltantes=";
-   echo "<input type='hidden' name='link' value='$link'>";
-   $lista = "Seleccione";
-   $valor = "";
-} else {
+}else {
    $link = "./";
    echo "<input type='hidden' name='link' value='$link'>";
    $lista = "Seleccione";
