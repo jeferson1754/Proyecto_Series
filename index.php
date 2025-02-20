@@ -108,7 +108,7 @@ require 'bd.php';
         if (isset($_GET['borrar'])) {
             $busqueda = "";
 
-            $where = "WHERE $fila8!='Finalizado' ORDER BY `$tabla`.`$fila7` DESC;";
+            $where = "WHERE $fila8!='Finalizado' ORDER BY `series`.`Estado` ASC limit 100";
         } else if (isset($_GET['filtrar'])) {
             if (isset($_GET['estado'])) {
                 $estado   = $_REQUEST['estado'];
@@ -154,7 +154,7 @@ require 'bd.php';
                     $sql1 = "SELECT * FROM $tabla $where";
 
                     $result = mysqli_query($conexion, $sql1);
-                    //echo $sql1;
+                    echo $sql1;
 
 
                     while ($mostrar = mysqli_fetch_array($result)) {
