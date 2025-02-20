@@ -382,7 +382,7 @@
 
 
 
-                        <header>
+                        <header class="text-center">
                             <?php
                             if (strlen($fila["Anime"]) > 35) {
                                 echo substr($fila["Anime"], 0, length: 35) . "...";
