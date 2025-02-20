@@ -154,7 +154,7 @@ require 'bd.php';
                     $sql1 = "SELECT * FROM $tabla $where";
 
                     $result = mysqli_query($conexion, $sql1);
-                    echo $sql1;
+                    //echo $sql1;
 
 
                     while ($mostrar = mysqli_fetch_array($result)) {
