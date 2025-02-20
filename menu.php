@@ -33,7 +33,7 @@
                 <li class="nav-item active"> <a class="nav-link" href="/Series/">Series</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"> <a class="nav-link" href="/Manga/Tachiyomi/">Horario</a> </li>
+                <li class="nav-item active"> <a class="nav-link" href="/Series/horario.php">Horario</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"> <a class="nav-link" href="/Manga/Finalizados/">Ver Calificaciones</a> </li>
