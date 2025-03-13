@@ -10,7 +10,7 @@
 
       <form method="POST" action="recib_Update.php">
         <?php include('regreso-modal.php');  ?>
-        <input type="hidden" name="id" value="<?php echo $mostrar[$fila7]; ?>">
+        <input type="hidden" name="id" value="<?php echo $mostrar['ID']; ?>">
         <input type="hidden" name="estado_antiguo" value="<?php echo $mostrar[$fila8]; ?>">
 
         <div class="modal-body p-4">
