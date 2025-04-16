@@ -90,19 +90,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
 
-        if ($dato8 != $estado_antiguo && $dato8=='Finalizado') {
-
-            $alertTitle = '¡Agregar Calificacion!';
-            $alertText = 'La serie ' . $dato1 . ' termino, desea clasificarla?';
+        if ($dato8 != $estado_antiguo && in_array($dato8, ['Finalizado', 'Pendiente'])) {
+            $alertTitle = '¡Agregar Calificación!';
+            $alertText = 'La serie ' . $dato1 . ' T' . $dato4 . ' terminó, ¿desea clasificarla?';
             $alertType = 'info';
-            $redireccion = "window.location='Calificaciones/editar_stars.php?id=" . urlencode($idRegistros) . "&nombre=" . urlencode($dato1) . "&temporada=" . urlencode($dato4) . "';";
-
+            $redireccion = "window.location='Calificaciones/editar_stars.php?id=" . urlencode($idRegistros) .
+                "&nombre=" . urlencode($dato1) .
+                "&temporada=" . urlencode($dato4) . "';";
         } else {
-            $alertTitle = '¡Actualizacion Exitosa!';
-            $alertText = 'Actualizando Serie de ' . $dato1 . ' en ' . $Tabla . '';
+            $alertTitle = '¡Actualización Exitosa!';
+            $alertText = 'Actualizando serie de ' . $dato1 . ' en ' . $Tabla;
             $alertType = 'success';
             $redireccion = "window.location='$link'";
         }
+
 
 
 

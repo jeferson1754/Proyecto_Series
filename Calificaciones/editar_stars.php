@@ -131,7 +131,7 @@ $titulos = array("Guion", "Dirección", "Impacto Visual", "Narrativa", "Conclusi
 </head>
 
 <body>
-    <h2>Califica: <?php echo htmlspecialchars($nombre_anime . " " . $temporada); ?></h2>
+    <h2>Califica: <?php echo htmlspecialchars($nombre_anime . " T" . $temporada); ?></h2>
 
     <div class="container">
         <?php
