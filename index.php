@@ -60,6 +60,7 @@ require 'bd.php';
                 <div class="col-md-4">
                     <select name="estado" class="form-control" style="max-width: 100% !important;">
                         <option value="">Seleccione:</option>
+                        <option value="Viendo">Viendo</option>
                         <?php
                         $query = $conexion->query("SELECT * FROM $tabla3;");
                         while ($valores = mysqli_fetch_array($query)) {
@@ -84,7 +85,7 @@ require 'bd.php';
         <div class="filter-section" id="myDIV2" style="display:none;">
             <form action="" method="GET" class="row g-3">
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="busqueda" placeholder="Nombre del Webtoon...">
+                    <input type="search" class="form-control" name="busqueda" placeholder="Nombre de la Serie...">
                 </div>
 
                 <div class="col-md-4">
@@ -102,13 +103,13 @@ require 'bd.php';
 
         include('./ModalCrear.php');
 
-        $where = "WHERE $fila8!='Finalizado' ORDER BY `series`.`Estado` ASC limit 100";
+        $where = "WHERE $fila8!='Finalizado' ORDER BY FIELD(Estado, 'Viendo', 'Emisión', 'Pausado', 'Pendiente')  limit 100";
         $busqueda = "";
 
         if (isset($_GET['borrar'])) {
 
 
-            $where = "WHERE $fila8!='Finalizado' ORDER BY `series`.`Estado` ASC limit 100";
+            $where = "WHERE $fila8!='Finalizado' ORDER BY FIELD(Estado, 'Viendo', 'Emisión', 'Pausado', 'Pendiente')  ASC limit 100";
         } else if (isset($_GET['filtrar'])) {
             if (isset($_GET['estado'])) {
                 $estado   = $_REQUEST['estado'];
@@ -124,7 +125,7 @@ require 'bd.php';
             }
         } else if (isset($_GET['link'])) {
 
-            $where = "WHERE Link = '' or Estado_Link != 'Correcto' ORDER BY `$tabla`.`$fila7` DESC  limit 100";
+            $where = "WHERE Link = '' or Estado_Link != 'Correcto' ORDER BY `$tabla`.`Estado` ASC  limit 100";
         }
 
         ?>
@@ -168,7 +169,7 @@ require 'bd.php';
                             <td>
                                 <span class="status-badge 
                                     <?php
-                                    if ($mostrar[$fila8] == 'Emision') {
+                                    if ($mostrar[$fila8] == 'Emision' || $mostrar[$fila8] == 'Viendo') {
                                         echo 'status-en-emision';
                                     } elseif ($mostrar[$fila8] == 'Finalizado') {
                                         echo 'status-finalizado';

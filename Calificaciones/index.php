@@ -870,7 +870,7 @@ require '../bd.php';
                         ?>
                             <tr>
                                 <td><?php echo $mostrar['ID']; ?></td>
-                                <td><?php echo $mostrar['Anime'] . " " . $mostrar['Temporadas']; ?></td>
+                                <td><?php echo $mostrar['Anime'] . " T" . $mostrar['Temporadas']; ?></td>
                                 <td class="rating-cell progress-cell <?php echo $rating_class; ?>"><?php echo $mostrar['Calificacion_1']; ?></td>
                                 <td class="rating-cell progress-cell <?php echo $rating_class; ?>"><?php echo $mostrar['Calificacion_2']; ?></td>
                                 <td class="rating-cell progress-cell <?php echo $rating_class; ?>"><?php echo $mostrar['Calificacion_3']; ?></td>

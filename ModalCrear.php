@@ -49,6 +49,7 @@
               <div class="form-floating mb-3">
                 <select name="fila8" class="form-select" id="floatingFila8" required>
                   <option value="">Seleccione</option>
+                  <option value="Viendo">Viendo</option>
                   <?php
                   $query = $conexion->query("SELECT * FROM estado;");
                   while ($valores = mysqli_fetch_array($query)) {
