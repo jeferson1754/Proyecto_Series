@@ -85,10 +85,6 @@
                     echo "<option value=''>Selecciona un estado</option>";
                   }
 
-                  // Opción manual agregada
-                  $seleccionado = ($mostrar[$fila8] === 'Viendo') ? 'selected' : '';
-                  echo "<option value='Viendo' $seleccionado>Viendo</option>";
-
                   if ($estados) {
                     foreach ($estados as $estado) {
                       echo "<option value='{$estado['Estado']}' " .
