@@ -26,6 +26,8 @@ try {
 // Establecer la zona horaria para Santiago de Chile.
 date_default_timezone_set('America/Santiago');
 
+$fecha_actual = date('Y-m-d');
+
 $tabla = "series";
 $tabla3 = "estado"; //Estado 
 $tabla4 = "tachiyomi";

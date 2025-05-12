@@ -123,6 +123,22 @@
                 </select>
               </div>
             </div>
+
+            <!-- Capítulos -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label fw-bold">Fecha Inicio</label>
+                <input type="date" name="fecha_inicio" class="form-control" value="<?php echo $mostrar['Fecha_Inicio']; ?>">
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label fw-bold">Fecha Fin</label>
+                <input type="date" name="fecha_fin" class="form-control" value="<?php echo $mostrar['Fecha_Fin']; ?>">
+              </div>
+            </div>
           </div>
 
 

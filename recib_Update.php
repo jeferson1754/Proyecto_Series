@@ -38,6 +38,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado_antiguo = $_REQUEST['estado_antiguo'];
     $link         = $_REQUEST['link'];
 
+
+    if ($dato8 != $estado_antiguo && in_array($dato8, ['Viendo', 'Emision'])) {
+        $fecha_inicio = $fecha_actual;
+        $fecha_fin    = $_REQUEST['fecha_fin'];
+    } elseif ($dato8 != $estado_antiguo && in_array($dato8, ['Finalizado', 'Pendiente'])) {
+        $fecha_inicio = $_REQUEST['fecha_inicio'];
+        $fecha_fin    = $fecha_actual;
+    } else {
+        $fecha_inicio = $_REQUEST['fecha_inicio'];
+        $fecha_fin    = $_REQUEST['fecha_fin'];
+    }
+
+
+
+
     $sql = ("SELECT * FROM $tabla where $fila7='$idRegistros';");
     $consulta = mysqli_query($conexion, $sql);
 
@@ -71,7 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fila4 = :dato4,
                 $fila8 = :dato8,
                 $fila6 = :dato6,
-                $fila11 = :estado
+                $fila11 = :estado,
+                Fecha_Inicio = :fecha_inicio,
+                Fecha_Fin = :fecha_fin
                 WHERE $fila7 = :idRegistros";
 
             $stmt = $conn->prepare($sql);
@@ -83,6 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':dato8' => $dato8,
                 ':dato6' => $dato6,
                 ':estado' => $estado,
+                ':fecha_inicio' => $fecha_inicio,
+                ':fecha_fin' => $fecha_fin,
                 ':idRegistros' => $idRegistros
             ]);
         } catch (PDOException $e) {
