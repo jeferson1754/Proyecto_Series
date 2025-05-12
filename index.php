@@ -169,8 +169,10 @@ require 'bd.php';
                             <td>
                                 <span class="status-badge 
                                     <?php
+                                    $display = 'none';
                                     if ($mostrar[$fila8] == 'Emision' || $mostrar[$fila8] == 'Viendo') {
                                         echo 'status-en-emision';
+                                        $display = 'flex';
                                     } elseif ($mostrar[$fila8] == 'Finalizado') {
                                         echo 'status-finalizado';
                                     } elseif ($mostrar[$fila8] == 'Pendiente') {
@@ -186,12 +188,13 @@ require 'bd.php';
                             <td><span class="day-badge"><?php echo $mostrar['Dias'] ?></span></td>
 
 
-                            <td data-label="Acciones">
-                                <div class="action-buttons">
+                            <td data-label="Acciones" style="text-align: center; vertical-align: middle;">
+                                <div class="action-buttons" style="display: inline-flex; gap: 5px;">
                                     <button type="button"
                                         class="action-button bg-info"
+                                        style="display: <?= $display; ?>;"
                                         data-toggle="modal"
-                                        data-target="#caps<?php echo $mostrar[$fila7]; ?>"
+                                        data-target="#caps<?= $mostrar[$fila7]; ?>"
                                         aria-label="Aprobar">
                                         <i class="fa fa-eye"></i>
                                     </button>
@@ -199,7 +202,7 @@ require 'bd.php';
                                         class="action-button bg-primary"
                                         data-tooltip="Editar"
                                         data-toggle="modal"
-                                        data-target="#edit<?php echo $mostrar[$fila7]; ?>"
+                                        data-target="#edit<?= $mostrar[$fila7]; ?>"
                                         aria-label="Editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -207,12 +210,13 @@ require 'bd.php';
                                         class="action-button bg-danger"
                                         data-tooltip="Eliminar"
                                         data-toggle="modal"
-                                        data-target="#delete<?php echo $mostrar[$fila7]; ?>"
+                                        data-target="#delete<?= $mostrar[$fila7]; ?>"
                                         aria-label="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </td>
+
                         </tr>
 
                     <?php
