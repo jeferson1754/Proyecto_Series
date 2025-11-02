@@ -11,7 +11,7 @@ if (isset($_GET['id']) && isset($_GET['nombre'])) {
 require '../bd.php';
 
 // Array con los títulos de los encabezados
-$titulos = array("Guion", "Dirección", "Impacto Visual", "Narrativa", "Conclusion");
+$titulos = array("Narrativa", "Desarrollo de Personajes", "Impacto Visual y Calidad", "Impacto Cultural", "Conclusión");
 ?>
 
 <head>

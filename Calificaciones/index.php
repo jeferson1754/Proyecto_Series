@@ -827,11 +827,11 @@ require '../bd.php';
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th class="progress-cell">Guion</th>
-                            <th class="progress-cell">Direccion</th>
-                            <th class="progress-cell">Impacto Visual</th>
                             <th class="progress-cell">Narrativa</th>
-                            <th class="progress-cell">Conclusion</th>
+                            <th class="progress-cell">Desarrollo de Personajes</th>
+                            <th class="progress-cell">Impacto Visual y Calidad</th>
+                            <th class="progress-cell">Impacto Cultural</th>
+                            <th class="progress-cell">Conclusión</th>
                             <th>Promedio</th>
                             <th>Acciones</th>
                         </tr>

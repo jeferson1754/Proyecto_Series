@@ -6,9 +6,31 @@
 <?php
 include 'bd.php';
 
-function alerta($alertTitle, $alertText, $alertType, $redireccion)
+function alerta_no($alertTitle, $alertText, $alertType, $redireccion)
 {
 
+    echo '
+ <script>
+      Swal.fire({
+        title: "' . $alertTitle . '",
+        text: "' . $alertText . '",
+        icon: "' . $alertType . '",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            ' . $redireccion . ';
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location="index.php"; // Vuelve a la página anterior
+        }
+    });
+    </script>';
+}
+
+function alerta($alertTitle, $alertText, $alertType, $redireccion)
+{
     echo '
  <script>
         Swal.fire({
@@ -39,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $link         = $_REQUEST['link'];
 
 
-    if ($dato8 != $estado_antiguo && in_array($dato8, ['Viendo', 'Emision'])) {
+    if (in_array($estado_antiguo, ['Finalizado', 'Pendiente']) && in_array($dato8, ['Viendo', 'Emision'])) {
         $fecha_inicio = $fecha_actual;
         $fecha_fin    = $_REQUEST['fecha_fin'];
-    } elseif ($dato8 != $estado_antiguo && in_array($dato8, ['Finalizado', 'Pendiente'])) {
+    } elseif (in_array($estado_antiguo, ['Viendo', 'Emision']) && in_array($dato8, ['Finalizado', 'Pendiente'])) {
         $fecha_inicio = $_REQUEST['fecha_inicio'];
         $fecha_fin    = $fecha_actual;
     } else {
@@ -116,17 +138,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $redireccion = "window.location='Calificaciones/editar_stars.php?id=" . urlencode($idRegistros) .
                 "&nombre=" . urlencode($dato1) .
                 "&temporada=" . urlencode($dato4) . "';";
+            alerta_no($alertTitle, $alertText, $alertType, $redireccion);
         } else {
             $alertTitle = '¡Actualización Exitosa!';
             $alertText = 'Actualizando serie de ' . $dato1 . ' en ' . $Tabla;
             $alertType = 'success';
             $redireccion = "window.location='$link'";
+            alerta($alertTitle, $alertText, $alertType, $redireccion);
         }
 
 
 
 
-        alerta($alertTitle, $alertText, $alertType, $redireccion);
+
         die();
     }
 }
