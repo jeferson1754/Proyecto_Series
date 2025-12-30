@@ -36,6 +36,10 @@
                 <li class="nav-item active"> <a class="nav-link" href="/Series/horario.php">Horario</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"> <a class="nav-link" href="/Series/graficos.php">Graficos</a> </li>
+            </ul>
+
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"> <a class="nav-link" href="/Series/Calificaciones/calificaciones.php">Ver Calificaciones</a> </li>
             </ul>
             <ul class="navbar-nav mr-auto">
