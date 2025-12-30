@@ -906,6 +906,10 @@ body {
                 grid-template-columns: repeat(3, 1fr);
                 /* 3 columnas en pantallas pequeñas */
             }
+
+            .progress-celu {
+                display: block !important;
+            }
         }
     
         /* Media Query para pantallas medianas (hasta 480px de ancho) */
@@ -922,4 +926,42 @@ body {
                 grid-template-columns: 1fr;
                 /* 1 columna en pantallas muy pequeñas */
             }
+        }
+        
+        .progress-celu {
+            display: none !important;
+        }
+
+        .progress-cell {
+            width: 150px;
+        }
+
+        .progress {
+            height: 0.75rem;
+            border-radius: 9999px;
+            background-color: #e5e7eb;
+        }
+
+        .progress-bar {
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+        }
+
+        .episode-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .episode-watched {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .episode-pending {
+            background-color: #fef3c7;
+            color: #92400e;
         }

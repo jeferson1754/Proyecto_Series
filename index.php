@@ -141,7 +141,8 @@ require 'bd.php';
                     <tr>
                         <th><?php echo $fila7 ?></th>
                         <th><?php echo $fila1 ?></th>
-                        <th><?php echo $fila3 ?></th>
+                        <th>Vistos</th>
+                        <th>Progreso</th>
                         <th><?php echo $fila4 ?></th>
                         <th><?php echo $fila8 ?></th>
                         <th><?php echo $fila6 ?></th>
@@ -160,11 +161,38 @@ require 'bd.php';
 
                     while ($mostrar = mysqli_fetch_array($result)) {
                         $iden = $mostrar[$fila7];
+
+                        $faltantes = $mostrar['Total'] - $mostrar['Vistos'];
+                        $porcentaje = ($mostrar['Vistos'] / $mostrar['Total']) * 100;
+
                     ?>
                         <tr>
                             <td class="fw-500"><?php echo $mostrar[$fila7] ?></td>
                             <td class="fw-500"><a href="<?php echo $mostrar[$fila2] ?>" title="<?php echo $mostrar[$fila11] ?>" target="_blanck" style="text-decoration: none;"><?php echo $mostrar[$fila1] ?></a></td>
-                            <td class="fw-500"><?php echo $mostrar[$fila3] ?></td>
+                            <td>
+                                <div class="progress-cell">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1">
+                                            <div class="progress-bar bg-<?php echo $porcentaje == 100 ? 'success' : 'primary' ?>"
+                                                role="progressbar"
+                                                style="width: <?php echo $porcentaje ?>%"
+                                                aria-valuenow="<?php echo $porcentaje ?>"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <span class="small"><?php echo $mostrar['Vistos'] ?>/<?php echo $mostrar['Total'] ?></span>
+                                    </div>
+                                </div>
+                                <div class="progress-celu">
+                                    <span class="small"><?php echo $mostrar['Vistos'] ?>/<?php echo $mostrar['Total'] ?></span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="episode-badge <?php echo $faltantes > 0 ? 'episode-pending' : 'episode-watched' ?>">
+                                    <?php echo $faltantes > 0 ? $faltantes . ' pendientes' : 'Al día' ?>
+                                </span>
+                            </td>
                             <td class="fw-500">Temporada <?php echo $mostrar[$fila4] ?></td>
                             <td>
                                 <span class="status-badge 

@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dato4      = $_REQUEST['fila4'];
     $dato6      = $_REQUEST['fila6'];
     $dato8      = $_REQUEST['fila8'];
+    $totales     = $_REQUEST['totales'];
     $estado     = $_REQUEST['fila11'];
     $estado_antiguo = $_REQUEST['estado_antiguo'];
     $link         = $_REQUEST['link'];
@@ -107,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fila3 = :dato3,
                 $fila4 = :dato4,
                 $fila8 = :dato8,
+                Total = :totales,
                 $fila6 = :dato6,
                 $fila11 = :estado,
                 Fecha_Inicio = :fecha_inicio,
@@ -122,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':dato8' => $dato8,
                 ':dato6' => $dato6,
                 ':estado' => $estado,
+                ':totales' => $totales,
                 ':fecha_inicio' => $fecha_inicio,
                 ':fecha_fin' => $fecha_fin,
                 ':idRegistros' => $idRegistros
