@@ -74,6 +74,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
+    if ($dato8 == "Viendo") {
+        // 1. Obtener el total actual de animes pendientes/viendo
+        $sql = "SELECT 
+            SUM(
+                CASE 
+                    WHEN (Total - Vistos) > 0 
+                    THEN CEIL((Total - Vistos) / 5)
+                    ELSE 0
+                END
+            ) AS bloques_series
+        FROM series
+        WHERE Estado IN ('Pendiente', 'Viendo')
+        ";
+        $result = mysqli_query($conexion, $sql);
+        $fila = mysqli_fetch_row($result);
+        $total_actual = (int) $fila[0];
+
+        // 2. Consultar el ÚLTIMO valor insertado en la tabla de historial
+        $stmt_check = $connect->prepare("
+        SELECT total_anterior 
+        FROM estadisticas_historial 
+        WHERE categoria = 'Series' 
+        ORDER BY fecha_actualizacion DESC LIMIT 1
+    ");
+        $stmt_check->execute();
+        $ultimo_registro = $stmt_check->fetchColumn();
+
+        // 3. Insertar una NUEVA FILA solo si el valor cambió o si no hay registros previos
+        if ($ultimo_registro === false || $total_actual != $ultimo_registro) {
+            $stmt = $connect->prepare("
+            INSERT INTO estadisticas_historial (categoria, total_anterior, fecha_actualizacion)
+            VALUES ('Series', ?, NOW())
+        ");
+            $stmt->execute([$total_actual]);
+        }
+    } else {
+        echo "El estado no es viendo";
+        echo "<br>";
+    }
+
+
+
+
 
 
     $sql = ("SELECT * FROM $tabla where $fila7='$idRegistros';");
