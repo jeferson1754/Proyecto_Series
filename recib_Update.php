@@ -77,13 +77,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($dato8 == "Viendo") {
         // 1. Obtener el total actual de animes pendientes/viendo
         $sql = "SELECT 
+        CEIL(
             SUM(
                 CASE 
                     WHEN (Total - Vistos) > 0 
-                    THEN CEIL((Total - Vistos) / 5)
+                    THEN (Total - Vistos) / 6
                     ELSE 0
                 END
-            ) AS bloques_series
+            )) AS bloques_series
         FROM series
         WHERE Estado IN ('Pendiente', 'Viendo')
         ";
