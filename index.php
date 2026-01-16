@@ -1,6 +1,14 @@
 <?php
 
 require 'bd.php';
+// Función para clasificar según tus reglas
+function obtenerTipoSerie($totalCaps)
+{
+    if ($totalCaps < 10) return "Corta";
+    if ($totalCaps >= 10 && $totalCaps < 20) return "Mediana";
+    return "Larga";
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -47,7 +55,6 @@ require 'bd.php';
             <button type="submit" name="link" class="btn btn-warning btn-custom btn-<?php echo $sizebtn ?>" style="text-decoration: none;">
                 <i class="fas fa-unlink"></i> Sin Link
             </button>
-
 
             <button class="btn btn-custom btn-secondary btn-<?php echo $sizebtn ?> " type="submit" name="borrar">
                 <i class="fas fa-eraser"></i>
@@ -139,81 +146,85 @@ require 'bd.php';
             <table id="example" class="table custom-table">
                 <thead>
                     <tr>
-                        <th><?php echo $fila7 ?></th>
-                        <th><?php echo $fila1 ?></th>
-                        <th>Vistos</th>
-                        <th>Progreso</th>
-                        <th><?php echo $fila4 ?></th>
-                        <th><?php echo $fila8 ?></th>
-                        <th><?php echo $fila6 ?></th>
-
-
-                        <th style="text-align: center;">Acciones</th>
+                        <th>Serie</th>
+                        <th>Progreso Episodios</th>
+                        <th>Estructura (Bloques)</th>
+                        <th>Temporadas</th>
+                        <th>Estado</th>
+                        <th>Dias</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sql1 = "SELECT * FROM $tabla $where";
+                    // SQL que ya trae la clasificación calculada
+                    $sql1 = "SELECT *, 
+                        CASE 
+                            WHEN Total < 10 THEN 'Corta'
+                            WHEN Total >= 10 AND Total < 20 THEN 'Mediana'
+                            ELSE 'Larga'
+                        END as Categoria_Tamano
+                        FROM $tabla $where";
 
                     $result = mysqli_query($conexion, $sql1);
                     //echo $sql1;
 
 
                     while ($mostrar = mysqli_fetch_array($result)) {
-                        $iden = $mostrar[$fila7];
-
-                        $faltantes = $mostrar['Total'] - $mostrar['Vistos'];
                         $porcentaje = ($mostrar['Vistos'] / $mostrar['Total']) * 100;
+                        $tipo = $mostrar['Categoria_Tamano'];
 
+                        // Lógica de Bloques (Regla 2)
+                        if ($tipo == "Corta") $numBloques = 1;
+                        elseif ($tipo == "Mediana") $numBloques = 2;
+                        else $numBloques = ceil($mostrar['Total'] / 6);
+
+                        $bloquesCompletos = ($mostrar['Total'] > 0) ? floor(($mostrar['Vistos'] / $mostrar['Total']) * $numBloques) : 0;
                     ?>
-                        <tr>
-                            <td class="fw-500"><?php echo $mostrar[$fila7] ?></td>
-                            <td class="fw-500"><a href="<?php echo $mostrar[$fila2] ?>" title="<?php echo $mostrar[$fila11] ?>" target="_blanck" style="text-decoration: none;"><?php echo $mostrar[$fila1] ?></a></td>
-                            <td>
-                                <div class="progress-cell">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar bg-<?php echo $porcentaje == 100 ? 'success' : 'primary' ?>"
-                                                role="progressbar"
-                                                style="width: <?php echo $porcentaje ?>%"
-                                                aria-valuenow="<?php echo $porcentaje ?>"
-                                                aria-valuemin="0"
-                                                aria-valuemax="100">
-                                            </div>
-                                        </div>
-                                        <span class="small"><?php echo $mostrar['Vistos'] ?>/<?php echo $mostrar['Total'] ?></span>
-                                    </div>
-                                </div>
-                                <div class="progress-celu">
-                                    <span class="small"><?php echo $mostrar['Vistos'] ?>/<?php echo $mostrar['Total'] ?></span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="episode-badge <?php echo $faltantes > 0 ? 'episode-pending' : 'episode-watched' ?>">
-                                    <?php echo $faltantes > 0 ? $faltantes . ' pendientes' : 'Al día' ?>
-                                </span>
-                            </td>
-                            <td class="fw-500">Temporada <?php echo $mostrar[$fila4] ?></td>
-                            <td>
-                                <span class="status-badge 
-                                    <?php
-                                    $display = 'none';
-                                    if ($mostrar[$fila8] == 'Emision' || $mostrar[$fila8] == 'Viendo') {
-                                        echo 'status-en-emision';
-                                        $display = 'flex';
-                                    } elseif ($mostrar[$fila8] == 'Finalizado') {
-                                        echo 'status-finalizado';
-                                    } elseif ($mostrar[$fila8] == 'Pendiente') {
-                                        echo 'status-pendiente';
-                                    } elseif ($mostrar[$fila8] == 'Pausado') {
-                                        echo 'status-pausado';
-                                    }
-                                    ?>">
-                                    <?php echo $mostrar[$fila8] ?>
-                                </span>
 
+
+                        <tr>
+                            <td>
+                                <a href="<?= $mostrar[$fila2] ?>" class="fw-bold text-decoration-none">
+                                    <?= $mostrar[$fila1] ?>
+                                </a>
+                                <small class="d-block text-muted"><?= $tipo ?></small>
                             </td>
+                            <td style="min-width: 150px;">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar <?= $porcentaje == 100 ? 'bg-success' : '' ?>" style="width: <?= $porcentaje ?>%"></div>
+                                </div>
+                                <small><?= $mostrar['Vistos'] ?> / <?= $mostrar['Total'] ?> caps</small>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <?php for ($i = 0; $i < $numBloques; $i++): ?>
+                                        <div class="rounded-pill <?= ($i < $bloquesCompletos) ? 'bg-success' : 'bg-light border' ?>"
+                                            style="width: 25px; height: 8px;"
+                                            data-bs-toggle="tooltip" title="Bloque <?= $i + 1 ?>"></div>
+                                    <?php endfor; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <?php
+                                $tTotal = $mostrar['Temp_Totales'] ?? 1;
+                                $colorT = ($tTotal >= 5) ? 'danger' : (($tTotal >= 2) ? 'warning text-dark' : 'info text-white');
+                                ?>
+                                <span class="badge bg-<?= $colorT ?>">T-<?= $mostrar[$fila4] ?> / Total: <?= $tTotal ?></span>
+                            </td>
+                            <td>
+                                <?php if ($mostrar[$fila8] == 'Emision' || $mostrar[$fila8] == 'Viendo'): ?>
+                                    <span class="badge w-100 status-en-emision"><i class="fas fa-broadcast-tower"></i> <?= $mostrar[$fila8] ?></span>
+                                <?php else: ?>
+                                    <span class="status-badge status-<?= strtolower($mostrar[$fila8]) ?> w-100">
+                                        <?= $mostrar[$fila8] ?>
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+
                             <td><span class="day-badge"><?php echo $mostrar['Dias'] ?></span></td>
+
+
 
 
                             <td data-label="Acciones" style="text-align: center; vertical-align: middle;">

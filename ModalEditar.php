@@ -55,7 +55,7 @@
             </div>
 
             <!-- Capítulos -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label class="form-label fw-bold"><?php echo $fila3 ?></label>
                 <input type="number" name="fila3" class="form-control" max="<?php echo $mostrar['Total']; ?>" value="<?php echo $mostrar[$fila3]; ?>">
@@ -63,7 +63,7 @@
             </div>
 
             <!-- Total -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label class="form-label fw-bold">Totales</label>
                 <input type="number" name="totales" class="form-control" value="<?php echo $mostrar['Total']; ?>">
@@ -71,10 +71,17 @@
             </div>
 
             <!-- Temporadas -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="form-group">
                 <label class="form-label fw-bold"><?php echo $fila4 ?></label>
                 <input type="number" name="fila4" class="form-control" value="<?php echo $mostrar[$fila4]; ?>">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label class="form-label fw-bold">Total de Temporadas</label>
+                <input type="number" name="temp_totales" class="form-control" value="<?= $mostrar['Temp_Totales'] ?? 1; ?>">
               </div>
             </div>
 

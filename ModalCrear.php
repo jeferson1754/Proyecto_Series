@@ -30,17 +30,25 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-floating mb-3">
-                <input class="form-control" id="municipio" name="fila3" type="number" required>
+                <input class="form-control" id="municipio" value="0" name="fila3" type="number" required>
                 <label for="vistos"><?php echo $fila3 ?></label>
               </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-floating mb-3">
-                <input class="form-control" id="municipio_inm" name="fila4" type="number" required>
-                <label for="municipio_inm"><?php echo $fila4 ?></label>
+                <input class="form-control" id="municipio2" value="1" name="epi_totales" type="number" required>
+                <label for="totales">Total Episodios</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating mb-3">
+                <label class="form-label"></label>
+                <input type="number" name="temp_totales" value="1" class="form-control" id="floatingFila3">
+                <label for="floatingFila3">Total Temp.</label>
               </div>
             </div>
 
@@ -76,6 +84,8 @@
                 <label for="floatingFila8"><?php echo $fila6 ?></label>
               </div>
             </div>
+
+
           </div>
         </div>
 

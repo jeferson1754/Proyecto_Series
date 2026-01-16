@@ -8,9 +8,10 @@ include 'bd.php';
 $dato1      = $_REQUEST['fila1'];
 $dato2      = $_REQUEST['fila2'];
 $dato3      = $_REQUEST['fila3'];
-$dato4      = $_REQUEST['fila4'];
 $dato8      = $_REQUEST['fila8'];
 $dato6      = $_REQUEST['fila6'];
+$epi_totales = $_REQUEST['epi_totales'];
+$temp_totales = $_REQUEST['temp_totales'];
 
 $sql      = ("SELECT * FROM $tabla where $fila1='$dato1';");
 $consulta = mysqli_query($conexion, $sql);
@@ -23,11 +24,11 @@ echo $dato1;
 echo "<br>";
 $Tabla = ucfirst($tabla);
 
-    if($dato2 == ""){
-        $estado = "Faltante";
-    }else{
-        $estado = "Correcto";
-    }
+if ($dato2 == "") {
+    $estado = "Faltante";
+} else {
+    $estado = "Correcto";
+}
 
 
 
@@ -37,9 +38,9 @@ if (mysqli_num_rows($consulta) == 0) {
     echo "<br>";
 
     try {
-        $sql = "INSERT INTO $tabla(`$fila1`,`$fila2`,`$fila3`, `$fila4`, `$fila6`,`$fila8`,`$fila11`) VALUES( '" . $dato1 . "','" . $dato2 . "','" . $dato3 . "','" . $dato4 . "','" . $dato6 . "','" . $dato8 . "','" . $estado . "')";
+        $sql = "INSERT INTO $tabla(`$fila1`,`$fila2`,`$fila3`, `$fila6`,`$fila8`,`$fila11`,`Temp_Totales`,`Total`) VALUES( '" . $dato1 . "','" . $dato2 . "','" . $dato3 . "','" . $dato6 . "','" . $dato8 . "','" . $estado . "', '" . $temp_totales . "', '" . $epi_totales . "')";
 
-   
+
         echo $sql;
         echo "<br>";
         $result = mysqli_query($conexion, $sql);
@@ -60,8 +61,6 @@ if (mysqli_num_rows($consulta) == 0) {
         </script>';
 
     echo "<br>";
-
-
 } else {
 
     echo "$dato1 existe en $tabla";

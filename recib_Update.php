@@ -60,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado     = $_REQUEST['fila11'];
     $estado_antiguo = $_REQUEST['estado_antiguo'];
     $link         = $_REQUEST['link'];
+    $temp_totales = $_REQUEST['temp_totales'];
 
 
     if (in_array($estado_antiguo, ['Finalizado', 'Pendiente']) && in_array($dato8, ['Viendo', 'Emision'])) {
@@ -155,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Total = :totales,
                 $fila6 = :dato6,
                 $fila11 = :estado,
+                Temp_Totales = :temp_totales,
                 Fecha_Inicio = :fecha_inicio,
                 Fecha_Fin = :fecha_fin
                 WHERE $fila7 = :idRegistros";
@@ -168,6 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':dato8' => $dato8,
                 ':dato6' => $dato6,
                 ':estado' => $estado,
+                ':temp_totales' => $temp_totales,
                 ':totales' => $totales,
                 ':fecha_inicio' => $fecha_inicio,
                 ':fecha_fin' => $fecha_fin,
