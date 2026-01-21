@@ -10,6 +10,33 @@ function obtenerTipoSerie($totalCaps)
 }
 
 
+// Diccionario de traducción
+$dias_esp = [
+    'Monday'    => 'Lunes',
+    'Tuesday'   => 'Martes',
+    'Wednesday' => 'Miercoles',
+    'Thursday'  => 'Jueves',
+    'Friday'    => 'Viernes',
+    'Saturday'  => 'Sabado',
+    'Sunday'    => 'Domingo'
+];
+
+$dia_actual_esp = $dias_esp[date('l')]; // Ejemplo: 'Miércoles'
+
+// SQL para aumentar 1 capítulo disponible si hoy es el día de estreno
+// y no se ha actualizado hoy todavía.
+$sqlAutoUpdate = "UPDATE $tabla 
+                  SET Caps_Disponibles = Caps_Disponibles + 1, 
+                      Ultima_Actualizacion = CURDATE() 
+                  WHERE Dias = '$dia_actual_esp' 
+                  AND Estado = 'Emisión' 
+                  AND Caps_Disponibles < Total 
+                  AND (Ultima_Actualizacion != CURDATE() OR Ultima_Actualizacion IS NULL)";
+
+mysqli_query($conexion, $sqlAutoUpdate);
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +57,6 @@ function obtenerTipoSerie($totalCaps)
 <body>
 
     <?php include('menu.php'); ?>
-
 
     <div class="main-container">
         <!--- Formulario para registrar Cliente --->
@@ -194,7 +220,21 @@ function obtenerTipoSerie($totalCaps)
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar <?= $porcentaje == 100 ? 'bg-success' : '' ?>" style="width: <?= $porcentaje ?>%"></div>
                                 </div>
-                                <small><?= $mostrar['Vistos'] ?> / <?= $mostrar['Total'] ?> caps</small>
+
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="fw-bold"><?= $mostrar['Vistos'] ?> / <?= $mostrar['Total'] ?> caps</small>
+
+                                    <?php
+                                    // LÓGICA DE CAPÍTULOS DISPONIBLES (NUEVO)
+                                    $nuevos =  $mostrar['Caps_Disponibles'] - $mostrar['Vistos'];
+
+                                    if ($nuevos > 0 && $mostrar[$fila8] == 'Emision'): ?>
+                                        <span class="badge bg-info text-white pulse-new" style="font-size: 0.65rem; border-radius: 50px; padding: 4px 8px;">
+                                            <i class="fas fa-plus me-1" style="font-size: 0.6rem;"></i><?= $nuevos ?> por ver
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                               
                             </td>
                             <td>
                                 <div class="d-flex gap-1">
@@ -222,7 +262,23 @@ function obtenerTipoSerie($totalCaps)
                                 <?php endif; ?>
                             </td>
 
-                            <td><span class="day-badge"><?php echo $mostrar['Dias'] ?></span></td>
+                            <td class="text-center" style="vertical-align: middle;">
+                                <div class="d-flex flex-column align-items-center justify-content-center" style="position: relative; min-width: 80px;">
+                                    <?php if ($mostrar['Dias'] == $dia_actual_esp): ?>
+                                        <div class="estreno-hoy-badge" title="¡Estrena hoy!">
+                                            <i class="fas fa-calendar-check pulse-icon"></i>
+                                        </div>
+                                        <span class="fw-bold text-primary" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                                            <?= $mostrar['Dias'] ?>
+                                        </span>
+                                        <small class="text-primary fw-bold" style="font-size: 0.6rem; text-transform: uppercase;">Hoy</small>
+                                    <?php else: ?>
+                                        <span class="day-badge" style="font-size: 0.8rem; opacity: 0.7;">
+                                            <?= $mostrar['Dias'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
 
 
 
