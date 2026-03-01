@@ -39,7 +39,7 @@
 
             <div class="col-md-4">
               <div class="form-floating mb-3">
-                <input class="form-control" id="municipio2" value="1" name="epi_totales" type="number" required>
+                <input class="form-control" id="municipio2" value="1" name="epi_totales" min="1" type="number" required>
                 <label for="totales">Total Episodios</label>
               </div>
             </div>

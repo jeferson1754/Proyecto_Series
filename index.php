@@ -9,6 +9,7 @@ function obtenerTipoSerie($totalCaps)
     return "Larga";
 }
 
+$sizebtn = "sm";
 
 ?>
 <!DOCTYPE html>
@@ -171,7 +172,10 @@ function obtenerTipoSerie($totalCaps)
 
 
                     while ($mostrar = mysqli_fetch_array($result)) {
-                        $porcentaje = ($mostrar['Vistos'] / $mostrar['Total']) * 100;
+
+                        // Si 'Total' es mayor a 0, calcula el porcentaje. Si es 0, el porcentaje es 0.
+                        $porcentaje = ($mostrar['Total'] > 0) ? ($mostrar['Vistos'] / $mostrar['Total']) * 100 : 0;
+
                         $tipo = $mostrar['Categoria_Tamano'];
 
                         // Lógica de Bloques (Regla 2)
