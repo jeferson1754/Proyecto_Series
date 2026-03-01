@@ -189,7 +189,7 @@ $sizebtn = "sm";
 
                         <tr>
                             <td>
-                                <a href="<?= $mostrar[$fila2] ?>" class="fw-bold text-decoration-none">
+                                <a href="<?= $mostrar[$fila2] ?>" target="_blank" class="fw-bold text-decoration-none">
                                     <?= $mostrar[$fila1] ?>
                                 </a>
                                 <small class="d-block text-muted"><?= $tipo ?></small>
