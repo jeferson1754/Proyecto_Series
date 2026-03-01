@@ -25,7 +25,7 @@ $sizebtn = "sm";
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="./css/style new.css?v=<?php echo time(); ?>">
-
+    <link rel="stylesheet" type="text/css" href="./css/star.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
