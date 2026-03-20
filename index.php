@@ -9,6 +9,7 @@ function obtenerTipoSerie($totalCaps)
     return "Larga";
 }
 
+$sizebtn = "sm";
 
 // Diccionario de traducción
 $dias_esp = [
@@ -51,7 +52,7 @@ mysqli_query($conexion, $sqlAutoUpdate);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="./css/style new.css?v=<?php echo time(); ?>">
-
+    <link rel="stylesheet" type="text/css" href="./css/star.css?v=<?php echo time(); ?>">
 </head>
 
 <body>
@@ -197,7 +198,10 @@ mysqli_query($conexion, $sqlAutoUpdate);
 
 
                     while ($mostrar = mysqli_fetch_array($result)) {
-                        $porcentaje = ($mostrar['Vistos'] / $mostrar['Total']) * 100;
+
+                        // Si 'Total' es mayor a 0, calcula el porcentaje. Si es 0, el porcentaje es 0.
+                        $porcentaje = ($mostrar['Total'] > 0) ? ($mostrar['Vistos'] / $mostrar['Total']) * 100 : 0;
+
                         $tipo = $mostrar['Categoria_Tamano'];
 
                         // Lógica de Bloques (Regla 2)
@@ -211,7 +215,7 @@ mysqli_query($conexion, $sqlAutoUpdate);
 
                         <tr>
                             <td>
-                                <a href="<?= $mostrar[$fila2] ?>" class="fw-bold text-decoration-none">
+                                <a href="<?= $mostrar[$fila2] ?>" target="_blank" class="fw-bold text-decoration-none">
                                     <?= $mostrar[$fila1] ?>
                                 </a>
                                 <small class="d-block text-muted"><?= $tipo ?></small>

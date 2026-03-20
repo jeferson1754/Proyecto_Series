@@ -154,6 +154,42 @@
                 <input type="date" name="fecha_fin" class="form-control" value="<?php echo $mostrar['Fecha_Fin']; ?>">
               </div>
             </div>
+
+            <div class="rating-box">
+              <header>Calificación del Anime</header>
+              <div class="stars">
+                <?php
+                $sql2 = "SELECT Promedio FROM calificaciones_series WHERE ID_Serie='$mostrar[ID]'";
+                $result2 = $conexion->query($sql2);
+
+                if ($result2->num_rows > 0) {
+                  $row = $result2->fetch_assoc();
+                  $calificacion = $row["Promedio"];
+                  $texto = "Promedio:";
+                } else {
+                  $calificacion = "";
+                  $texto = "Sin Calificar Aun";
+                }
+
+                for ($i = 1; $i <= 5; $i++) {
+                  if ($i <= $calificacion) {
+                    echo '<i class="fa-solid fa-star active"></i>';
+                  } else {
+                    echo '<i class="fa-solid fa-star"></i>';
+                  }
+                }
+                ?>
+              </div>
+              <div class="rating-text">
+                <?php echo $texto ?> <span class="rating-value"><?php echo $calificacion ?></span>
+              </div>
+              <?php $variable_nombre = urlencode($mostrar["Nombre"]); ?>
+              <?php $variable_temporada = urlencode($mostrar['Temporadas']); ?>
+              <a href="./Calificaciones/editar_stars.php?id=<?php echo $mostrar['ID']; ?>&nombre=<?php echo $variable_nombre; ?>&temporada=<?php echo $variable_temporada; ?>"
+                class="btn btn-secondary mt-3">
+                Cambiar Calificación
+              </a>
+            </div>
           </div>
 
 

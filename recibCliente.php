@@ -10,7 +10,8 @@ $dato2      = $_REQUEST['fila2'];
 $dato3      = $_REQUEST['fila3'];
 $dato8      = $_REQUEST['fila8'];
 $dato6      = $_REQUEST['fila6'];
-$epi_totales = $_REQUEST['epi_totales'];
+// Si el valor es menor o igual a 0, se asigna 1 automáticamente
+$epi_totales = ($_REQUEST['epi_totales'] > 0) ? $_REQUEST['epi_totales'] : 1;
 $temp_totales = $_REQUEST['temp_totales'];
 
 $sql      = ("SELECT * FROM $tabla where $fila1='$dato1';");
