@@ -174,7 +174,7 @@ mysqli_query($conexion, $sqlAutoUpdate);
                     <tr>
                         <th>Serie</th>
                         <th>Progreso Episodios</th>
-                        <th>Estructura (Bloques)</th>
+                        <th>Bloques</th>
                         <th>Temporadas</th>
                         <th>Estado</th>
                         <th>Dias</th>
@@ -234,7 +234,7 @@ mysqli_query($conexion, $sqlAutoUpdate);
                                         </span>
                                     <?php endif; ?>
                                 </div>
-                               
+
                             </td>
                             <td>
                                 <div class="d-flex gap-1">
@@ -247,10 +247,24 @@ mysqli_query($conexion, $sqlAutoUpdate);
                             </td>
                             <td>
                                 <?php
-                                $tTotal = $mostrar['Temp_Totales'] ?? 1;
-                                $colorT = ($tTotal >= 5) ? 'danger' : (($tTotal >= 2) ? 'warning text-dark' : 'info text-white');
+                                $tActual = $mostrar[$fila4] ?? 0; // Temporada que estás viendo
+                                $tTotal = $mostrar['Temp_Totales'] ?? 1; // Total de temporadas
+
+                                // Calculamos la resta (Temporadas faltantes)
+                                $resta = $tTotal - $tActual;
+
+                                // Lógica de color basada en la RESTA:
+                                // 3 o más faltantes: Peligro (Rojo)
+                                // 1 o 2 faltantes: Advertencia (Naranja)
+                                // 0 o menos: Info (Azul)
+                                $vistos = $mostrar['Vistos'] ?? 0;
+
+                                $colorT = ($resta >= 5) ? 'danger' : (($resta >= 3) ? 'warning text-dark' : (($resta >= 1) ? 'info text-white' : (($vistos >= 1) ? 'success text-white' : 'info text-white')));
                                 ?>
-                                <span class="badge bg-<?= $colorT ?>">T-<?= $mostrar[$fila4] ?> / Total: <?= $tTotal ?></span>
+
+                                <span class="badge bg-<?= $colorT ?>">
+                                    T-<?= $tActual ?> / Total: <?= $tTotal ?>
+                                </span>
                             </td>
                             <td>
                                 <?php if ($mostrar[$fila8] == 'Emision' || $mostrar[$fila8] == 'Viendo'): ?>
