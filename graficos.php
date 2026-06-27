@@ -119,6 +119,24 @@ while ($row = mysqli_fetch_assoc($resFin)) {
     $dataFin[] = [$row['Fecha_Fin'], (int)$row['total'], $row['nombres']];
 }
 
+// Extraer todos los años que existen en tus datos reales
+$anos_detectados = [];
+
+foreach ($dataInicio as $d) {
+    $anos_detectados[] = (int)date('Y', strtotime($d[0]));
+}
+foreach ($dataFin as $d) {
+    $anos_detectados[] = (int)date('Y', strtotime($d[0]));
+}
+
+// Eliminar duplicados y ordenar
+$anos_detectados = array_unique($anos_detectados);
+// ORDENAR: Cambiamos sort() por rsort() para que salgan de más reciente a más antiguo
+rsort($anos_detectados);
+
+if (empty($anos_detectados)) {
+    $anos_detectados = [(int)date('Y')];
+}
 
 // Estructura jerárquica: Estado > Nombres
 $sqlSun = "SELECT $fila8 as estado, $fila1 as nombre FROM $tabla";
@@ -273,9 +291,14 @@ $capsPorDia = round($dataMetrica['caps_por_dia'], 2);
             </div>
             <div class="row">
                 <div class="col-12">
-                    <div class="card shadow-sm p-3">
-                        <h5 class="text-center">Historial de Actividad (Calendario)</h5>
-                        <div id="chartCal" style="height: 250px;"></div>
+                    <div class="calendario-carrusel-container" style="position: relative; max-width: 900px; margin: 0 auto; text-align: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <button id="btnPrevCal" class="btn" style="cursor: pointer; padding: 5px 15px;">◀</button>
+                            <h3 id="txtAnoActual" style="margin: 0; font-weight: bold; color: #333;">2026</h3>
+                            <button id="btnNextCal" class="btn" style="cursor: pointer; padding: 5px 15px;">▶</button>
+                        </div>
+
+                        <div id="chartCal" style="width: 100%; height: 200px;"></div>
                     </div>
                 </div>
             </div>
@@ -525,69 +548,187 @@ $capsPorDia = round($dataMetrica['caps_por_dia'], 2);
             }]
         }]
     });
+    // Recibir datos de PHP
+    var listaAnos = <?php echo json_encode($anos_detectados); ?>;
+    var rawInicio = <?php echo json_encode($dataInicio); ?>;
+    var rawFin = <?php echo json_encode($dataFin); ?>;
 
+    // Variables de control de estado del carrusel
+    var indiceActual = 0; // Al estar rsort(), el índice 0 es el año más reciente
+
+    // --- PROCESADOR DE COINCIDENCIAS (MITAD Y MITAD) ---
+    var datosInicioFiltrados = [];
+    var datosFinFiltrados = [];
+    var datosAmbos = [];
+
+    var mapaFechasInicio = {};
+    rawInicio.forEach(d => {
+        mapaFechasInicio[d[0]] = d;
+    });
+    var mapaFechasFin = {};
+    rawFin.forEach(d => {
+        mapaFechasFin[d[0]] = d;
+    });
+
+    Object.keys(mapaFechasInicio).forEach(fecha => {
+        if (mapaFechasFin[fecha]) {
+            var nombresCombinados = `Iniciaste: ${mapaFechasInicio[fecha][2]}<br/>Terminaste: ${mapaFechasFin[fecha][2]}`;
+            datosAmbos.push([fecha, 1, nombresCombinados]);
+        } else {
+            datosInicioFiltrados.push(mapaFechasInicio[fecha]);
+        }
+    });
+
+    Object.keys(mapaFechasFin).forEach(fecha => {
+        if (!mapaFechasInicio[fecha]) {
+            datosFinFiltrados.push(mapaFechasFin[fecha]);
+        }
+    });
+
+    // Vectores SVG Semicírculos nativos
+    var svgIzquierda = 'path://M 100, 100 A 50,50 0 0,0 100,0 L 100,100 Z'; // Semicírculo Izquierdo
+    var svgDerecha = 'path://M 100, 100 A 50,50 0 0,1 100,0 L 100,100 Z'; // Semicírculo Derecho
+
+    // Inicializar el gráfico en su contenedor de dimensiones fijas
     var chartCal = echarts.init(document.getElementById('chartCal'));
 
-    var optionCal = {
-        tooltip: {
-            trigger: 'item',
-            formatter: function(p) {
-                // p.seriesName nos dirá si es Inicio o Fin
-                var tipo = p.seriesName;
-                var fecha = p.data[0];
-                var nombres = p.data[2] || "Sin nombre";
-                var color = tipo === 'Inicio' ? 'blue' : 'red';
-                return `<b style="color:${color}">${tipo}</b><br/>${fecha} - ${nombres}`;
-            }
-        },
-        legend: {
-            data: ['Inicio', 'Fin'],
-            top: 10
-        },
-        calendar: {
-            top: 80,
-            left: 30,
-            right: 30,
-            cellSize: ['auto', 13],
-            range: '2025',
-            itemStyle: {
-                borderWidth: 0.5,
-                borderColor: '#eee'
-            },
-            dayLabel: {
-                firstDay: 1,
-                nameMap: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
-            },
-            monthLabel: {
-                nameMap: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
-            }
-        },
-        series: [{
-                name: 'Inicio',
-                type: 'scatter', // Usamos scatter sobre el calendario para que puedan solaparse
-                coordinateSystem: 'calendar',
-                symbolSize: 10,
-                itemStyle: {
-                    color: '#007bff'
-                }, // Azul
-                data: <?php echo json_encode($dataInicio); ?>
-            },
-            {
-                name: 'Fin',
-                type: 'scatter',
-                coordinateSystem: 'calendar',
-                symbolSize: 10, // Un poco más pequeño para que si coinciden se vean ambos
-                itemStyle: {
-                    color: '#dc3545'
-                }, // Rojo
-                data: <?php echo json_encode($dataFin); ?>
-            }
-        ]
-    };
+    // Función central para renderizar o actualizar el año en pantalla
+    function actualizarGraficoPorAno(index) {
+        var anoSeleccionado = listaAnos[index];
 
-    chartCal.setOption(optionCal);
+        // Actualizar el texto del título H3
+        document.getElementById('txtAnoActual').innerText = anoSeleccionado;
 
-    chartCal.setOption(optionCal);
+        // --- CONTROL DE BOTONES INHABILITADOS ---
+        var btnPrev = document.getElementById('btnPrevCal');
+        var btnNext = document.getElementById('btnNextCal');
+
+        // Botón Izquierdo (Pasado / Año anterior): se inhabilita si llegamos al último índice (el año más viejo)
+        if (index >= listaAnos.length - 1) {
+            btnPrev.disabled = true;
+            btnPrev.style.opacity = "0.3"; // Lo hace ver grisáceo/desactivado
+            btnPrev.style.cursor = "not-allowed";
+        } else {
+            btnPrev.disabled = false;
+            btnPrev.style.opacity = "1";
+            btnPrev.style.cursor = "pointer";
+        }
+
+        // Botón Derecho (Futuro / Año siguiente): se inhabilita si estamos en el índice 0 (el año más reciente)
+        if (index <= 0) {
+            btnNext.disabled = true;
+            btnNext.style.opacity = "0.3"; // Lo hace ver grisáceo/desactivado
+            btnNext.style.cursor = "not-allowed";
+        } else {
+            btnNext.disabled = false;
+            btnNext.style.opacity = "1";
+            btnNext.style.cursor = "pointer";
+        }
+        // ----------------------------------------
+
+        var optionCal = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(p) {
+                    var tipo = p.seriesName;
+                    var fecha = p.data[0];
+                    var nombres = p.data[2] || "Sin nombre";
+                    return `<b>${tipo}</b><br/>${fecha}<br/>• ${nombres.split(', ').join('<br/>• ')}`;
+                }
+            },
+            legend: {
+                data: ['Inicio', 'Fin', 'Mismo Día'],
+                top: 0
+            },
+            calendar: {
+                top: 40,
+                left: 40,
+                right: 40,
+                cellSize: ['auto', 14],
+                range: anoSeleccionado.toString(),
+                itemStyle: {
+                    borderWidth: 0.5,
+                    borderColor: '#eee'
+                },
+                dayLabel: {
+                    firstDay: 1,
+                    nameMap: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+                },
+                monthLabel: {
+                    nameMap: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+                }
+            },
+            series: [{
+                    name: 'Inicio',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    symbolSize: 10,
+                    itemStyle: {
+                        color: '#007bff'
+                    },
+                    data: datosInicioFiltrados
+                },
+                {
+                    name: 'Fin',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    symbolSize: 10,
+                    itemStyle: {
+                        color: '#dc3545'
+                    },
+                    data: datosFinFiltrados
+                },
+                {
+                    name: 'Mismo Día',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    symbol: svgIzquierda,
+                    symbolSize: 11,
+                    itemStyle: {
+                        color: '#007bff'
+                    },
+                    data: datosAmbos
+                },
+                {
+                    name: 'Mismo Día',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    symbol: svgDerecha,
+                    symbolSize: 11,
+                    itemStyle: {
+                        color: '#dc3545'
+                    },
+                    data: datosAmbos
+                }
+            ]
+        };
+
+        chartCal.setOption(optionCal, true);
+    }
+
+    // Carga inicial (Muestra el año más reciente)
+    if (listaAnos.length > 0) {
+        actualizarGraficoPorAno(indiceActual);
+    }
+
+    // --- ESCUCHADORES DE LAS FLECHAS ---
+    document.getElementById('btnPrevCal').addEventListener('click', function() {
+        if (indiceActual < listaAnos.length - 1) {
+            indiceActual++;
+            actualizarGraficoPorAno(indiceActual);
+        }
+    });
+
+    document.getElementById('btnNextCal').addEventListener('click', function() {
+        if (indiceActual > 0) {
+            indiceActual--;
+            actualizarGraficoPorAno(indiceActual);
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        chartCal.resize();
+    });
 
     var chartSun = echarts.init(document.getElementById('chartSun'));
 

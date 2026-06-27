@@ -34,9 +34,10 @@ if ($serie['Temporadas'] < $serie['Temp_Totales']) {
                          Caps_Disponibles = 0
                      WHERE id = $id_serie";
 } else {
-    // Si era la ÚLTIMA temporada: marcar la serie como 'Terminado'
+    // Si era la ÚLTIMA temporada: marcar la serie como 'Terminado' y poner fecha_fin
     $query_update = "UPDATE `series` 
-                     SET Estado = 'Finalizado'
+                     SET Estado = 'Finalizado',
+                     Fecha_Fin = $fecha_actual
                      WHERE id = $id_serie";
 }
 
