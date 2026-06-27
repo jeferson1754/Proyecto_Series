@@ -51,7 +51,7 @@ if (mysqli_num_rows($emision) == 0) {
     try {
         $conn = new PDO("mysql:host=$servidor;dbname=$basededatos", $usuario, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "UPDATE $tabla SET `$fila3` ='" . $caps . "'+'" . $vistos . "' WHERE $fila1='" . $nombre . "';";
+        $sql = "UPDATE $tabla SET `$fila3` ='" . $caps . "'+'" . $vistos . "', `Caps_Disponibles` ='" . $caps . "'+'" . $vistos . "'  WHERE $fila1='" . $nombre . "';";
         $conn->exec($sql);
         echo $sql;
         echo "<br>";

@@ -39,7 +39,7 @@ if (mysqli_num_rows($consulta) == 0) {
     echo "<br>";
 
     try {
-        $sql = "INSERT INTO $tabla(`$fila1`,`$fila2`,`$fila3`, `$fila6`,`$fila8`,`$fila11`,`Temp_Totales`,`Total`) VALUES( '" . $dato1 . "','" . $dato2 . "','" . $dato3 . "','" . $dato6 . "','" . $dato8 . "','" . $estado . "', '" . $temp_totales . "', '" . $epi_totales . "')";
+        $sql = "INSERT INTO $tabla(`$fila1`,`$fila2`,`$fila3`, `$fila6`,`$fila8`,`$fila11`,`Temp_Totales`,`Total`,`Caps_Disponibles`) VALUES( '" . $dato1 . "','" . $dato2 . "','" . $dato3 . "','" . $dato6 . "','" . $dato8 . "','" . $estado . "', '" . $temp_totales . "', '" . $epi_totales . "', '" . $dato3 . "')";
 
 
         echo $sql;

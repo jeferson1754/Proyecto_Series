@@ -158,7 +158,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fila11 = :estado,
                 Temp_Totales = :temp_totales,
                 Fecha_Inicio = :fecha_inicio,
-                Fecha_Fin = :fecha_fin
+                Fecha_Fin = :fecha_fin,
+                Caps_Disponibles = :vistos
                 WHERE $fila7 = :idRegistros";
 
             $stmt = $conn->prepare($sql);
@@ -174,6 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':totales' => $totales,
                 ':fecha_inicio' => $fecha_inicio,
                 ':fecha_fin' => $fecha_fin,
+                ':vistos' => $fila3,
                 ':idRegistros' => $idRegistros
             ]);
         } catch (PDOException $e) {
