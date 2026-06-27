@@ -303,12 +303,23 @@ mysqli_query($conexion, $sqlAutoUpdate);
 
                             <td data-label="Acciones" style="text-align: center; vertical-align: middle;">
                                 <div class="action-buttons" style="display: inline-flex; gap: 5px;">
+
+                                    <?php if ($mostrar['Estado'] === 'Viendo'): ?>
+                                        <button type="button"
+                                            class="action-button bg-success btn-temporada-vista"
+                                            data-id="<?= $mostrar[$fila7]; ?>"
+                                            data-nombre="<?= htmlspecialchars($mostrar['Nombre']); ?>"
+                                            data-temporada="<?= $mostrar['Temporadas']; ?>"
+                                            aria-label="Temporada Vista">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    <?php endif; ?>
                                     <button type="button"
                                         class="action-button bg-info"
                                         style="display: <?= $display; ?>;"
                                         data-toggle="modal"
                                         data-target="#caps<?= $mostrar[$fila7]; ?>"
-                                        aria-label="Aprobar">
+                                        aria-label="Vistos">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                     <button type="button"
@@ -343,7 +354,66 @@ mysqli_query($conexion, $sqlAutoUpdate);
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            
+            <?php if (isset($_GET['status']) || isset($_GET['error'])): ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // 1. CAPTURAR EXITOS (?status=...)
+                        <?php if (isset($_GET['status'])): ?>
+                            const status = "<?= htmlspecialchars($_GET['status']) ?>";
+                            const serieName = "<?= isset($_GET['serie']) ? htmlspecialchars($_GET['serie']) : 'Serie' ?>";
+
+                            if (status === 'temporada_completada') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Temporada Completada!',
+                                    text: `Se avanzó correctamente a la siguiente temporada de "${serieName}".`,
+                                    confirmButtonColor: '#2ecc71'
+                                });
+                            } else if (status === 'serie_terminada') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Felicitaciones! 🎉',
+                                    text: `Has terminado por completo la serie "${serieName}". Pasó a la lista de Terminados.`,
+                                    confirmButtonColor: '#4361ee'
+                                });
+                            }
+                        <?php endif; ?>
+
+                        // 2. CAPTURAR ERRORES (?error=...)
+                        <?php if (isset($_GET['error'])): ?>
+                            const error = "<?= htmlspecialchars($_GET['error']) ?>";
+
+                            if (error === 'parametros_invalidos') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Acción inválida',
+                                    text: 'Los parámetros enviados al servidor no son correctos o están incompletos.',
+                                    confirmButtonColor: '#e74c3c'
+                                });
+                            } else if (error === 'serie_no_encontrada') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'No encontrado',
+                                    text: 'La serie seleccionada no existe en la base de datos o ya fue eliminada.',
+                                    confirmButtonColor: '#e74c3c'
+                                });
+                            } else if (error === 'error_al_actualizar') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error de Servidor',
+                                    text: 'No se pudo guardar el progreso en la base de datos. Inténtalo de nuevo.',
+                                    confirmButtonColor: '#e74c3c'
+                                });
+                            }
+                        <?php endif; ?>
+
+                        // Limpiar la URL para que no se repita el Swal si el usuario recarga la página manually
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    });
+                </script>
+            <?php endif; ?>
 
             <script>
                 $(document).ready(function() {
@@ -366,6 +436,40 @@ mysqli_query($conexion, $sqlAutoUpdate);
                     //Se actualiza en municipio inm
                     document.getElementById("municipio_inm").value = municipio;
                 }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Escuchar el clic en los botones de temporada vista
+                    const botones = document.querySelectorAll('.btn-temporada-vista');
+
+                    botones.forEach(boton => {
+                        boton.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const nombre = this.getAttribute('data-nombre');
+                            const temporada = this.getAttribute('data-temporada');
+
+                            // Lanzar SweetAlert2
+                            Swal.fire({
+                                title: '¿Completaste la temporada?',
+                                text: `Vas a marcar la Temporada ${temporada} de "${nombre}" como vista.`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonColor: '#2ecc71',
+                                cancelButtonColor: '#95a5a6',
+                                confirmButtonText: 'Sí, terminar temporada',
+                                cancelButtonText: 'Cancelar',
+                                background: '#ffffff',
+                                customClass: {
+                                    popup: 'border-radius-15'
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Aquí mandas la acción a tu backend PHP (por ejemplo, redirigiendo)
+                                    window.location.href = `procesar_temporada.php?id=${id}&action=completar`;
+                                }
+                            });
+                        });
+                    });
+                });
             </script>
 </body>
 
